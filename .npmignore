@@ -1,0 +1,13 @@
+src
+test
+tsconfig.json
+tsconfig.module.json
+.eslint.json
+.eslintignore
+.github
+.prettierignore
+.vscode
+build/docs
+**/*.spec.*
+*.log
+.idea

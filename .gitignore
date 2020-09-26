@@ -1,0 +1,10 @@
+node_modules
+lib
+es6
+test
+src/**.js
+.idea/*
+
+*.log
+
+yarn.lock
