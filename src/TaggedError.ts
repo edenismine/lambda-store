@@ -3,7 +3,7 @@ export interface TaggedError<T extends string | symbol> extends Error {
   reason?: Error
 }
 
-export const of = <T extends string | symbol>(
+export const TaggedError = <T extends string | symbol>(
   type: T,
   message?: string,
 ): TaggedError<T> => {
@@ -37,7 +37,7 @@ export const ofUnknown = <T extends string | symbol>(
     ? ofError(type, reason, message)
     : typeof reason === 'string'
     ? ofError(type, new Error(reason), message)
-    : of(type, message)
+    : TaggedError(type, message)
 
 export const map: <A extends string | symbol, B extends string | symbol>(
   fun: (a: A) => B,
