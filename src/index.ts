@@ -1,10 +1,31 @@
-export * as collection from './collection'
-export * as doc from './doc'
-export * as DocSnap from './DocSnap'
-export * as FirestoreError from './FirestoreError'
-export * as Sanitized from './Sanitized'
-export * as TaggedError from './TaggedError'
-export * as tasks from './tasks'
-export * as Tx from './Tx'
-export * as utils from './utils'
-export * as withConverter from './withConverter'
+import * as collection from './collection'
+import * as doc from './doc'
+import * as DocSnap from './DocSnap'
+import * as FirestoreError from './FirestoreError'
+import * as Limit from './Limit'
+import * as OrderBy from './OrderBy'
+import * as query from './query'
+import * as Sanitized from './Sanitized'
+import * as TaggedError from './TaggedError'
+import * as tasks from './tasks'
+import * as Tx from './Tx'
+import * as utils from './utils'
+import * as Where from './Where'
+import * as withConverter from './withConverter'
+
+export {
+  collection,
+  doc,
+  DocSnap,
+  FirestoreError,
+  Limit,
+  OrderBy,
+  query,
+  Sanitized,
+  TaggedError,
+  tasks,
+  Tx,
+  utils,
+  Where,
+  withConverter,
+}

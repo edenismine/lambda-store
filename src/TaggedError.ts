@@ -1,9 +1,12 @@
-export interface TaggedError<T extends string | symbol> extends Error {
+type Key = string | symbol
+
+export interface TaggedError<T extends Key> extends Error {
   type: T
+  name: string
   reason?: Error
 }
 
-export const TaggedError = <T extends string | symbol>(
+export const TaggedError = <T extends Key>(
   type: T,
   message?: string,
 ): TaggedError<T> => {
@@ -13,7 +16,7 @@ export const TaggedError = <T extends string | symbol>(
   return reason
 }
 
-export const ofError = <T extends string | symbol>(
+export const ofError = <T extends Key>(
   type: T,
   reason: Error,
   message?: string,
@@ -28,7 +31,7 @@ export const ofError = <T extends string | symbol>(
   return result
 }
 
-export const ofUnknown = <T extends string | symbol>(
+export const ofUnknown = <T extends Key>(
   type: T,
   reason: unknown,
   message?: string,
@@ -39,7 +42,7 @@ export const ofUnknown = <T extends string | symbol>(
     ? ofError(type, new Error(reason), message)
     : TaggedError(type, message)
 
-export const map: <A extends string | symbol, B extends string | symbol>(
+export const map: <A extends Key, B extends Key>(
   fun: (a: A) => B,
 ) => (fa: TaggedError<A>) => TaggedError<B> = fun => te =>
   ofError(fun(te.type), te)

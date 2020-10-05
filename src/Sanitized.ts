@@ -1,17 +1,15 @@
 import { DocumentReference, Timestamp } from '@google-cloud/firestore'
 import * as E from 'fp-ts/Either'
-import * as DS from './DocSnap'
+import * as te from './TaggedError'
 import {
   isDate,
-  isTimestamp,
   isDocumentReference,
-  isPrimitive,
   isObject,
+  isPrimitive,
+  isTimestamp,
   Primitive,
 } from './utils'
-import * as te from './TaggedError'
 import TaggedError = te.TaggedError
-import DocSnap = DS.DocSnap
 
 export type Sanitized<T> = T extends Timestamp
   ? Date
@@ -25,17 +23,17 @@ export type Sanitized<T> = T extends Timestamp
   ? { [K in keyof T]: Sanitized<T[K]> }
   : never
 
-export type SanitizationError = 'SanitizationError'
+export type SanitizationErrorType = 'SanitizationError'
+export type SanitizationError = TaggedError<SanitizationErrorType>
+export const liftSanitizationError = (x: unknown): SanitizationError =>
+  te.ofUnknown('SanitizationError', x)
 
-export const sanitized = <R>(
-  doc: DocSnap<R>,
-): E.Either<TaggedError<SanitizationError>, DocSnap<Sanitized<R>>> =>
-  E.tryCatch(
-    () => DS.map(_sanitized)(doc),
-    reason => te.ofUnknown('SanitizationError', reason),
-  )
+export const sanitize = <A>(
+  data: A,
+): E.Either<TaggedError<SanitizationErrorType>, Sanitized<A>> =>
+  E.tryCatch(() => _unsafeSanitize(data), liftSanitizationError)
 
-const _sanitized = <A>(data: A): Sanitized<A> => {
+const _unsafeSanitize = <A>(data: A): Sanitized<A> => {
   if (isDate(data)) {
     return data as Sanitized<A>
   } else if (isTimestamp(data)) {
@@ -45,11 +43,11 @@ const _sanitized = <A>(data: A): Sanitized<A> => {
   } else if (isPrimitive(data)) {
     return data as Sanitized<A>
   } else if (Array.isArray(data)) {
-    return data.map(_sanitized) as Sanitized<A>
+    return data.map(_unsafeSanitize) as Sanitized<A>
   } else if (isObject(data) && data.constructor.name === 'Object') {
     return Object.entries(data).reduce(
       (acc: Record<string, unknown>, [key, value]) => {
-        acc[key] = _sanitized(value)
+        acc[key] = _unsafeSanitize(value)
         return acc
       },
       {},
