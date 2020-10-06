@@ -25,9 +25,7 @@ export type FirestoreField =
   | { [property: string]: FirestoreField }
   | FirestoreField[]
 
-export type FireDoc<A> = A extends Record<string, FirestoreField>
-  ? { [K in keyof A]: FieldValue | A[K] }
-  : never
+export type FireDoc<A> = { [K in keyof A]: FieldValue | A[K] }
 
 export const isObject = (x: unknown): x is Record<string, unknown> =>
   x !== null && typeof x === 'object' && !Array.isArray(x)
