@@ -6,9 +6,11 @@ LambdaStore is a functional-style firestore library.
 
 To install the latest stable version along with peer dependencies
 
-    npm i lambda-store rambda fp-ts io-ts
+```sh
+npm i lambda-store fp-ts @google-cloud/firestore
+```
 
-**Note**. [`fp-ts`](https://github.com/gcanti/fp-ts),
-[`io-ts`](https://github.com/gcanti/io-ts) and
-[`rambda`](https://github.com/selfrefactor/rambda) are peer dependencies
-for `lambda-store`
+**Notes**
+
+- [`fp-ts`](https://github.com/gcanti/fp-ts) is a peer dependency for `lambda-store`
+- [`@google-cloud/firestore`](https://www.npmjs.com/package/@google-cloud/firestore) is a peer dependency for `lambda-store`
