@@ -1,4 +1,8 @@
-import { DocumentReference, DocumentSnapshot } from '@google-cloud/firestore'
+import {
+  DocumentReference,
+  DocumentSnapshot,
+  Timestamp,
+} from '@google-cloud/firestore'
 
 /**
  * Read a document with data.
@@ -7,36 +11,36 @@ export type DocData<A> = Readonly<{
   _tag: 'DocData'
 
   id: string
-  ref: DocumentReference
-  readTime: Date
+  ref: DocumentReference<A>
+  readTime: Timestamp
 
   data: A
-  createTime: Date
-  updateTime: Date
+  createTime: Timestamp
+  updateTime: Timestamp
 }>
 
 /**
  * Read an empty document.
  */
-export type NoDoc = Readonly<{
+export type NoDoc<A> = Readonly<{
   _tag: 'NoDoc'
 
   id: string
-  ref: DocumentReference
-  readTime: Date
+  ref: DocumentReference<A>
+  readTime: Timestamp
 }>
 
 /**
  * Document Snapshots either hold data or they don't.
  */
-export type DocSnap<A> = NoDoc | DocData<A>
+export type DocSnap<A> = NoDoc<A> | DocData<A>
 
 export const fromSnapshot = <A>(snap: DocumentSnapshot<A>): DocSnap<A> => {
   const { id, ref, exists } = snap
   const data = snap.data()
-  const createTime = snap.createTime?.toDate() ?? new Date()
-  const updateTime = snap.updateTime?.toDate() ?? new Date()
-  const readTime = snap.readTime.toDate()
+  const createTime = snap.createTime ?? Timestamp.fromDate(new Date())
+  const updateTime = snap.updateTime ?? Timestamp.fromDate(new Date())
+  const readTime = snap.readTime
   if (exists && data !== undefined) {
     return { id, ref, data, createTime, updateTime, readTime, _tag: 'DocData' }
   } else {
@@ -44,10 +48,7 @@ export const fromSnapshot = <A>(snap: DocumentSnapshot<A>): DocSnap<A> => {
   }
 }
 
-export const map = <A, B>(f: (a: A) => B) => (fa: DocSnap<A>): DocSnap<B> =>
-  fa._tag === 'DocData' ? { ...fa, data: f(fa.data) } : fa
-
 export const fold = <A, B>(
-  onLeft: (f: NoDoc) => B,
+  onLeft: (f: NoDoc<A>) => B,
   onRight: (f: DocData<A>) => B,
 ) => (fa: DocSnap<A>): B => (fa._tag === 'DocData' ? onRight(fa) : onLeft(fa))
