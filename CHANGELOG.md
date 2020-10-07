@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/tormenteddan/lambda-store/compare/v0.2.2...v0.3.0) (2020-10-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* **docsnap.ts:** Dropped the map operation for DocSnaps, added type paramenter to NoDoc type, NoDoc
+and DocData now return parametrized document references.
+
+### Features
+
+* **docsnap.ts:** drop map operation generify documentReference instead ([7f8447f](https://github.com/tormenteddan/lambda-store/commit/7f8447fd0325510a31d3d0529b6c9ff3cc5e042b))
+
 ### [0.2.2](https://github.com/tormenteddan/lambda-store/compare/v0.2.1...v0.2.2) (2020-10-06)
 
 
